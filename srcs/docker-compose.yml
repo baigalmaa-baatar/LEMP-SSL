@@ -55,10 +55,10 @@ volumes:
     mariadb_volume:
         driver_opts:
             type: none
-            device: /root/work/tsastuul_data/mariadb
+            device: /root/work/your_data_dir/mariadb
             o: bind
     wordpress_volume:
         driver_opts:
             type: none
-            device: /root/work/tsastuul_data/wordpress
+            device: /root/work/your_data_dir/wordpress
             o: bind

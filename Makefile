@@ -10,8 +10,8 @@ clear_images:
 	@ docker rmi -f `docker images -q`
 
 local_data:
-	@ mkdir -p /root/work/tsastuul_data/mariadb || true
-	@ mkdir -p /root/work/tsastuul_data/wordpress || true
+	@ mkdir -p /root/work/your_data_dir/mariadb || true
+	@ mkdir -p /root/work/your_data_dir/wordpress || true
 
 build: ## Build image and start all containers in background
 	@ docker compose -f ./srcs/docker-compose.yml up -d --build
@@ -36,5 +36,5 @@ fclean:
 	@ docker volume prune --force || true
 	# @ docker volume rm srcs_mariadb_volume || true
 	# @ docker volume rm srcs_wordpress_volume || true
-	# @ rm -rf ../tsastuul_data/mariadb/* || true
-	# @ rm -rf ../tsastuul_data/wordpress/* || true
+	# @ rm -rf ../your_data_dir/mariadb/* || true
+	# @ rm -rf ../your_data_dir/wordpress/* || true
