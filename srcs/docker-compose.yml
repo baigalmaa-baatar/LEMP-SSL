@@ -1,0 +1,64 @@
+version: '3'
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    networks:
+        - web
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    restart: always
+
+  wordpress:
+    image: wordpress:php8.0-fpm
+    container_name: wordpress
+    depends_on:
+        - mariadb
+    networks:
+        - web
+    volumes:
+        - wordpress_volume:/var/www/html
+    environment:
+        - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
+        - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+        - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+        - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+    restart: always
+  
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+        - wordpress
+    ports:
+        - '80:80'
+        - '443:443'
+    volumes:
+        - ./requirements/nginx/config:/etc/nginx/conf.d
+        - ./requirements/nginx/cert:/etc/ssl
+        - wordpress_volume:/var/www/html
+    networks:
+        - web
+    restart: always
+
+networks:
+  web:
+    driver: bridge
+
+volumes:
+    mariadb_volume:
+        driver_opts:
+            type: none
+            device: /root/work/tsastuul_data/mariadb
+            o: bind
+    wordpress_volume:
+        driver_opts:
+            type: none
+            device: /root/work/tsastuul_data/wordpress
+            o: bind
